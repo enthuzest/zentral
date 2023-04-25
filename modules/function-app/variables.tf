@@ -9,4 +9,3 @@ variable "resource_group_name" {}
 variable "location" {}
 variable "app_settings" {}
 variable "function_app_name" {}
-variable "resource_group_name" {}
