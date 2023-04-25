@@ -1,5 +1,11 @@
+resource "random_string" "random" {
+  length  = 10
+  lower   = true
+  special = false
+}
+
 resource "azurerm_storage_account" "sa" {
-  name                     = "functionsapptestsa"
+  name                     = random_string.random.id
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
@@ -7,16 +13,13 @@ resource "azurerm_storage_account" "sa" {
 }
 
 resource "azurerm_function_app" "primary" {
-  name                       = var.function_app_name
+  name                       = "${var.function_app_name}-func-app"
   resource_group_name        = var.resource_group_name
   location                   = var.location
   app_service_plan_id        = azurerm_app_service_plan.example.id
   storage_account_name       = azurerm_storage_account.example.name
   storage_account_access_key = azurerm_storage_account.example.primary_access_key
-
-  app_settings = {
-        var.app_settings
-  }
+  app_settings               = var.app_settings
   identity = {
     type = "SystemAssigned"
   }
