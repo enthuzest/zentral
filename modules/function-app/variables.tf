@@ -1,7 +1,7 @@
 variable "dotnet_framework_version" {
   default = "v6.0"
 }
-variable "version" {
+variable "func_version" {
   default = "~4"
 }
 variable "tags" {}

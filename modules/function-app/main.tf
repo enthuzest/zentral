@@ -27,6 +27,6 @@ resource "azurerm_function_app" "primary" {
         always_on = true
   }
   dotnet_framework_version = var.dotnet_framework_version
-  version = var.version
+  version = var.func_version
   tags = var.tags
 }
