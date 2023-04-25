@@ -1,6 +1,6 @@
 locals {
   default_app_settings = {
-       APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.appi.instrumentation_key
+    AzureWebJobsStorage = azurerm_storage_account.sa.primary_connection_string
   }
 }
 
@@ -26,23 +26,16 @@ resource "azurerm_function_app" "primary" {
   app_service_plan_id        = var.app_service_plan_id
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
-  app_settings               = concat(local.default_app_settings , var.app_settings)
-  version = var.func_version
+  app_settings               = merge(local.default_app_settings, var.app_settings)
+  version                    = var.func_version
 
   identity {
     type = "SystemAssigned"
   }
   site_config {
-    always_on = true
+    always_on                = true
     dotnet_framework_version = var.dotnet_framework_version
   }
 
   tags = var.tags
-}
-
-resource "azurerm_application_insights" "appi" {
-  name                = "${var.function_app_name}-appi"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  application_type    = "web"
 }
