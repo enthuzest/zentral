@@ -11,8 +11,8 @@ import (
 func TestTerraformAzureFunctionAppExample(t *testing.T) {
 	t.Parallel()
 
-	//_random := strings.ToLower(random.UniqueId())
-	//uniquePostfix := strings.ToLower(random.UniqueId())
+	// subscriptionID is overridden by the environment variable "ARM_SUBSCRIPTION_ID"
+	subscriptionID := ""
 
 	// website::tag::1:: Configure Terraform setting up a path to Terraform code.
 	terraformOptions := &terraform.Options{
@@ -32,6 +32,10 @@ func TestTerraformAzureFunctionAppExample(t *testing.T) {
 	appDefaultHostName := terraform.Output(t, terraformOptions, "default_hostname")
 	appKind := terraform.Output(t, terraformOptions, "function_app_kind")
 
+	storageAccountName := terraform.Output(t, terraformOptions, "storage_account_name")
+	storageAccountTier := terraform.Output(t, terraformOptions, "storage_account_account_tier")
+	storageAccountKind := terraform.Output(t, terraformOptions, "storage_account_account_kind")
+
 	// website::tag::4:: Assert
 	assert.True(t, azure.AppExists(t, appName, resourceGroupName, ""))
 	site := azure.GetAppService(t, appName, resourceGroupName, "")
@@ -42,4 +46,14 @@ func TestTerraformAzureFunctionAppExample(t *testing.T) {
 
 	assert.NotEmpty(t, *site.OutboundIPAddresses)
 	assert.Equal(t, "Running", *site.State)
+
+	// website::tag::4:: Verify storage account properties and ensure it matches the output.
+	storageAccountExists := azure.StorageAccountExists(t, storageAccountName, resourceGroupName, subscriptionID)
+	assert.True(t, storageAccountExists, "storage account does not exist")
+
+	accountKind := azure.GetStorageAccountKind(t, storageAccountName, resourceGroupName, subscriptionID)
+	assert.Equal(t, storageAccountKind, accountKind, "storage account kind mismatch")
+
+	skuTier := azure.GetStorageAccountSkuTier(t, storageAccountName, resourceGroupName, subscriptionID)
+	assert.Equal(t, storageAccountTier, skuTier, "sku tier mismatch")
 }
