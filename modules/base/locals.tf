@@ -10,5 +10,19 @@ locals {
   prod_subscription_id = "00000000-0000-0000-0000-000000000000"
 
   subsription_id = var.environment == "nprd" ? local.nprd_subscription_id : local.prod_subscription_id
-  tenant_id     = "78ca5159-6d10-4edb-b73b-9ed9b98fd637"
+  tenant_id      = "78ca5159-6d10-4edb-b73b-9ed9b98fd637"
+
+  nprd_tags = {
+    "environment" = "nprd"
+    "created_by"  = "terraform"
+    "managed_by"  = "alpha-team"
+  }
+
+  prod_tags = {
+    "environment" = "nprd"
+    "created_by"  = "terraform"
+    "managed_by"  = "alpha-team"
+  }
+
+  tags = var.environment == "nprd" ? local.nprd_tags : local.prod_tags
 }
