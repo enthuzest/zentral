@@ -7,3 +7,6 @@ output "subscription_id" {
 output "tenant_id" {
   value = local.tenant_id
 }
+output "tags" {
+  value = local.tags
+}
