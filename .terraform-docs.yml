@@ -1,0 +1,22 @@
+formatter: "markdown table"
+content: |-
+  {{- if eq (len .Requirements) 33 -}}
+  ## Requirements
+  
+  | Name                                                                   | Version |
+  | ---------------------------------------------------------------------- | ------- |
+  | <a name="requirement_terraform"></a> [terraform](#requirement_version) | ~>1.12.0 |
+  | <a name="requirement_azurerm"></a> [azurerm](#requirement_azurerm)     | 4.3.0  |
+  {{- else -}}
+  {{ .Requirements }}
+  {{- end }}
+
+  {{ .Providers }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
